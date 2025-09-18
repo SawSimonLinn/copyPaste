@@ -16,6 +16,7 @@ import {
   Trash2,
   FileText,
   Link as LinkIcon,
+  Check,
 } from 'lucide-react';
 import {
   ClipboardItem,
@@ -89,12 +90,14 @@ export function ClipboardItemCard({
   onEdit,
   onDelete,
 }: ClipboardItemCardProps) {
+  const [copiedItemId, setCopiedItemId] = useState<string | null>(null);
 
-  const handleCopy = (value: string) => {
+  const handleCopy = (value: string, id: string) => {
     navigator.clipboard
       .writeText(value)
       .then(() => {
-        alert('Copied to clipboard!');
+        setCopiedItemId(id);
+        setTimeout(() => setCopiedItemId(null), 2000);
       })
       .catch(err => {
         alert('Failed to copy content to clipboard.');
@@ -168,10 +171,10 @@ export function ClipboardItemCard({
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleCopy(contentItem.value)}
+                        onClick={() => handleCopy(contentItem.value, contentItem.id)}
                         className="flex-shrink-0 h-7 w-7"
                     >
-                        <ClipboardCopy className="h-4 w-4" />
+                        {copiedItemId === contentItem.id ? <Check className="h-4 w-4 text-green-500" /> : <ClipboardCopy className="h-4 w-4" />}
                     </Button>
                 </div>
             ))}
